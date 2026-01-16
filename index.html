@@ -3,248 +3,307 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Ollas Comunes - Perú</title>
+    <title>Gestión Profesional de Ollas Comunes - Perú</title>
     <style>
         :root {
-            --rojo-oscuro: #990000;
-            --rojo-claro: #E63946;
+            --rojo-oscuro: #8B0000;
+            --rojo-claro: #FF4D4D;
             --blanco: #FFFFFF;
-            --gris-fondo: #F8F9FA;
+            --gris-fondo: #F4F4F4;
+            --sombra: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            padding: 0;
             background-color: var(--gris-fondo);
             color: #333;
         }
 
         header {
-            background: linear-gradient(to right, var(--rojo-oscuro), var(--rojo-claro));
+            background: linear-gradient(135deg, var(--rojo-oscuro), var(--rojo-claro));
             color: white;
-            padding: 30px 15px;
+            padding: 40px 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border-bottom: 5px solid var(--rojo-claro);
         }
 
-        .motto { font-style: italic; font-size: 0.9rem; display: block; margin-top: 10px; color: #FFD1D1; }
+        .motto { font-style: italic; font-weight: 300; display: block; margin-top: 10px; }
 
         nav {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            display: flex;
+            justify-content: center;
             background: white;
             position: sticky;
             top: 0;
-            z-index: 100;
-            border-bottom: 2px solid #ddd;
+            z-index: 1000;
+            box-shadow: var(--sombra);
+            overflow-x: auto;
         }
 
-        .nav-btn {
-            padding: 15px 5px;
-            text-align: center;
-            font-size: 0.8rem;
-            font-weight: bold;
+        .tab-link {
+            padding: 15px 20px;
             cursor: pointer;
+            font-weight: bold;
             color: var(--rojo-oscuro);
+            border-bottom: 4px solid transparent;
             transition: 0.3s;
-            border-bottom: 3px solid transparent;
+            white-space: nowrap;
         }
 
-        .nav-btn.active {
-            background-color: #FFF0F0;
-            border-bottom: 3px solid var(--rojo-claro);
+        .tab-link:hover, .tab-link.active {
             color: var(--rojo-claro);
+            border-bottom: 4px solid var(--rojo-claro);
+            background: #FFF5F5;
         }
 
         .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 15px;
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 15px;
         }
 
-        .section-content {
+        .session-card {
             display: none;
             background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            animation: slideUp 0.4s ease-out;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--sombra);
+            animation: fadeIn 0.5s ease;
         }
 
-        .section-content.active { display: block; }
+        .session-card.active { display: block; }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        h2 { color: var(--rojo-oscuro); border-bottom: 2px solid #eee; padding-bottom: 10px; }
-
-        .time-box {
-            background: #E63946;
+        .tag-time {
+            background: var(--rojo-oscuro);
             color: white;
             padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            float: right;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+            margin-bottom: 10px;
         }
 
-        .box-info {
-            background: #FFF5F5;
+        .objective-box {
+            background: #fdf2f2;
             border-left: 5px solid var(--rojo-claro);
-            padding: 20px;
+            padding: 15px;
             margin: 20px 0;
-            border-radius: 0 8px 8px 0;
         }
 
-        /* Herramienta Calculadora */
-        .calculator {
-            background: #2D3436;
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            margin-top: 25px;
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        .calculator input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: none;
-            font-size: 1rem;
-        }
-
-        .calc-btn {
-            background: var(--rojo-claro);
-            color: white;
-            border: none;
+        .concept-item {
+            background: #fff;
+            border: 1px solid #eee;
             padding: 15px;
-            width: 100%;
             border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1.1rem;
         }
 
-        .result-display {
-            text-align: center;
-            font-size: 1.4rem;
-            margin-top: 20px;
-            padding: 15px;
-            border: 2px dashed #FFD1D1;
+        .dynamic-box {
+            background: #F0F7FF;
+            border: 2px dashed #0056b3;
+            padding: 20px;
             border-radius: 10px;
+            margin-top: 20px;
         }
 
-        .footer-logo { text-align: center; padding: 30px; color: #888; font-size: 0.8rem; }
+        .btn-action {
+            background: var(--rojo-oscuro);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        footer { text-align: center; padding: 40px; color: #777; font-size: 0.9rem; }
+
+        /* Calculadora Estilo */
+        .calc-tool { background: #333; color: white; padding: 20px; border-radius: 10px; }
+        .calc-tool input { width: 90%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>ADMINISTRACIÓN DE OLLAS</h1>
+    <h1>CURSO DE FINANZAS PARA LIDERESAS</h1>
     <span class="motto">"Cosechando libertad, sembrando estabilidad"</span>
 </header>
 
 <nav>
-    <div class="nav-btn active" onclick="openSession(event, 'intro')">INICIO</div>
-    <div class="nav-btn" onclick="openSession(event, 's1')">S1: CAJA</div>
-    <div class="nav-btn" onclick="openSession(event, 's2')">S2: COMPRAS</div>
-    <div class="nav-btn" onclick="openSession(event, 's3')">S3: CUENTAS</div>
-    <div class="nav-btn" onclick="openSession(event, 's4')">S4: FUTURO</div>
+    <div class="tab-link active" onclick="openTab(event, 's0')">Sesión 0</div>
+    <div class="tab-link" onclick="openTab(event, 's1')">Sesión 1</div>
+    <div class="tab-link" onclick="openTab(event, 's2')">Sesión 2</div>
+    <div class="tab-link" onclick="openTab(event, 's3')">Sesión 3</div>
+    <div class="tab-link" onclick="openTab(event, 's4')">Sesión 4</div>
 </nav>
 
 <div class="container">
 
-    <section id="intro" class="section-content active">
-        <h2>Bienvenida Administradora</h2>
-        <p>Este curso básico de 4 sesiones ha sido diseñado para ayudarle a organizar mejor su olla común. Estamos empezando un camino hacia una gestión más profesional.</p>
+    <section id="s0" class="session-card active">
+        <span class="tag-time">Introducción</span>
+        <h2>Presentación y Reglas de Oro</h2>
+        <div class="objective-box">
+            <strong>Objetivo:</strong> Unificar el propósito de las administradoras y establecer un ambiente de respeto profesional.
+        </div>
+        <h3>Nuestras Reglas de Coexistencia:</h3>
+        <ul>
+            <li><strong>Escucha Activa:</strong> Respetamos la experiencia de cada socia fundadora.</li>
+            <li><strong>Puntualidad:</strong> Respetamos el tiempo de las madres trabajadoras.</li>
+            <li><strong>Transparencia:</strong> Cuentas claras para una comunidad sin conflictos.</li>
+            <li><strong>Colaboración:</strong> Aprendemos una de la otra para que todas las ollas prosperen.</li>
+        </ul>
+    </section>
+
+    <section id="s1" class="session-card">
+        <span class="tag-time">90 Minutos</span>
+        <h2>Sesión 1: El Control Diario de la Caja</h2>
+        <div class="objective-box">
+            <strong>Objetivo:</strong> Que la administradora sepa cuánto dinero real tiene en mano al final del día.
+        </div>
         
-        <div class="box-info">
-            <h3>Compromisos de Coexistencia</h3>
-            <ul>
-                <li><strong>Escucha Activa:</strong> Respetamos el turno y la experiencia de cada socia.</li>
-                <li><strong>Puntualidad:</strong> Valoramos el tiempo de las madres de familia.</li>
-                <li><strong>Transparencia:</strong> Es la base de la unión en nuestra olla.</li>
-                <li><strong>Colaboración:</strong> Si una progresa, la olla avanza.</li>
-            </ul>
+        <h3>Conceptos Clave:</h3>
+        <div class="concept-grid">
+            <div class="concept-item">
+                <strong>Ingreso Bruto:</strong> Todo lo recaudado por raciones y aportes.
+            </div>
+            <div class="concept-item">
+                <strong>Gasto de Reposición:</strong> Lo que debemos gastar mañana para volver a cocinar.
+            </div>
+            <div class="concept-item">
+                <strong>Saldo Neto:</strong> Lo que realmente queda para la olla después de pagar insumos.
+            </div>
+        </div>
+
+        <div class="dynamic-box">
+            <h3>Dinámica: "El Semáforo del Gasto"</h3>
+            <p>Clasificaremos boletas reales en 3 grupos: Indispensables (Arroz, Gas), Variables (Carne, Verdura) e Innecesarios (Gasto hormiga). Aprenderemos a priorizar la compra del día.</p>
         </div>
     </section>
 
-    <section id="s1" class="section-content">
-        <span class="time-box">90 Minutos</span>
-        <h2>Sesión 1: El Control del Dinero</h2>
-        <p><strong>Teoría (45 min):</strong> Aprenderemos a registrar ingresos (cuotas, raciones) y egresos (insumos, gas). Diferencia entre lo que tenemos en caja y lo que ya está comprometido.</p>
+    <section id="s2" class="session-card">
+        <span class="tag-time">90 Minutos</span>
+        <h2>Sesión 2: Compras Inteligentes y Ahorro</h2>
+        <div class="objective-box">
+            <strong>Objetivo:</strong> Optimizar el presupuesto comprando más con el mismo dinero.
+        </div>
         
-        <div class="calculator">
-            <h3>Calculadora de Costo por Ración</h3>
-            <p>Use esta herramienta para saber cuánto cuesta cada plato hoy:</p>
-            <label>Gasto total del día (S/):</label>
-            <input type="number" id="gastoTotal" placeholder="Ej. 150">
-            <label>Número de raciones preparadas:</label>
-            <input type="number" id="raciones" placeholder="Ej. 80">
-            <button class="calc-btn" onclick="calcRacion()">Calcular Costo por Plato</button>
-            <div class="result-display" id="resRacion">Costo: S/ 0.00</div>
+        <h3>Conceptos Clave:</h3>
+        <div class="concept-grid">
+            <div class="concept-item">
+                <strong>Compra en Volumen:</strong> El ahorro real al comprar sacos vs kilos.
+            </div>
+            <div class="concept-item">
+                <strong>Análisis de Estacionalidad:</strong> Aprovechar el producto de estación para bajar el costo del plato.
+            </div>
+        </div>
+
+        <div class="calc-tool">
+            <h3>Calculadora de Ahorro</h3>
+            <label>Precio por Kilo (Minorista):</label>
+            <input type="number" id="precioKilo" placeholder="S/ 5.00">
+            <label>Precio por Kilo (En Saco):</label>
+            <input type="number" id="precioSaco" placeholder="S/ 3.50">
+            <button class="btn-action" onclick="calcAhorro()">Calcular Ahorro Total</button>
+            <p id="resAhorro" style="margin-top:15px; color:#FFD1D1; font-weight:bold;"></p>
+        </div>
+
+        <div class="dynamic-box">
+            <h3>Dinámica: "La Administradora Negociadora"</h3>
+            <p>Juego de roles: Una socia es la proveedora mayorista y otra la administradora. El reto es negociar un descuento por compra semanal adelantada.</p>
         </div>
     </section>
 
-    <section id="s2" class="section-content">
-        <span class="time-box">90 Minutos</span>
-        <h2>Sesión 2: Compras y Ahorro</h2>
-        <p><strong>Teoría (45 min):</strong> Estrategias para comprar al por mayor. ¿Cómo nos unimos con otras ollas para bajar precios?</p>
-        <div class="box-info">
-            <h3>Práctica (45 min)</h3>
-            <p>Ejercicio de comparación de precios: Elaboraremos una tabla de proveedores para identificar dónde rinde más el presupuesto de la olla.</p>
+    <section id="s3" class="session-card">
+        <span class="tag-time">90 Minutos</span>
+        <h2>Sesión 3: Rendición de Cuentas Transparente</h2>
+        <div class="objective-box">
+            <strong>Objetivo:</strong> Evitar conflictos comunitarios mediante el reporte claro y ético.
+        </div>
+        
+        <h3>Conceptos Clave:</h3>
+        <div class="concept-grid">
+            <div class="concept-item">
+                <strong>El Cuaderno de Olla:</strong> Registro físico obligatorio de toda entrada y salida.
+            </div>
+            <div class="concept-item">
+                <strong>El Informe Semanal:</strong> Resumen simplificado para la asamblea de socios.
+            </div>
+        </div>
+
+        <div class="dynamic-box">
+            <h3>Dinámica: "Muro de la Confianza"</h3>
+            <p>Dibujaremos un cartel que cualquier vecino pueda entender. Debe responder: ¿Cuánto entró? ¿En qué se gastó? y ¿Cuánto queda?</p>
         </div>
     </section>
 
-    <section id="s3" class="section-content">
-        <span class="time-box">90 Minutos</span>
-        <h2>Sesión 3: Rendición de Cuentas</h2>
-        <p><strong>Teoría (45 min):</strong> Cómo presentar un informe sencillo a la asamblea de socios para evitar malentendidos y fortalecer la confianza.</p>
-        <div class="box-info">
-            <h3>Práctica (45 min)</h3>
-            <p>Diseño de la "Pizarra de Transparencia" que se colgará en el local de la olla común.</p>
+    <section id="s4" class="session-card">
+        <span class="tag-time">90 Minutos</span>
+        <h2>Sesión 4: Emprendimiento y Sostenibilidad</h2>
+        <div class="objective-box">
+            <strong>Objetivo:</strong> Generar recursos propios para que la olla sea fuerte y no solo dependa de donaciones.
         </div>
-    </section>
+        
+        <h3>Conceptos Clave:</h3>
+        <div class="concept-grid">
+            <div class="concept-item">
+                <strong>Capital de Trabajo:</strong> Pequeño fondo para iniciar un mini-negocio (ej. venta de pan).
+            </div>
+            <div class="concept-item">
+                <strong>Inversión Social:</strong> Usar las ganancias para mejorar la cocina o local.
+            </div>
+        </div>
 
-    <section id="s4" class="section-content">
-        <span class="time-box">90 Minutos</span>
-        <h2>Sesión 4: Futuro de la Olla</h2>
-        <p><strong>Teoría (45 min):</strong> ¿Cómo podemos generar ingresos extras? Pequeños emprendimientos (panadería, tejidos, venta de abonos) para no depender solo de donaciones.</p>
-        <div class="box-info">
-            <h3>Práctica (45 min)</h3>
-            <p>Lluvia de ideas y plan de acción para un proyecto productivo a cargo del comité de administración.</p>
+        <div class="dynamic-box">
+            <h3>Dinámica: "Plan de Acción 2026"</h3>
+            <p>Cada administradora diseñará un plan de 3 pasos para que su olla genere un ingreso extra el próximo mes (ej. venta de abono orgánico o talleres de tejido).</p>
         </div>
     </section>
 
 </div>
 
-<div class="footer-logo">
-    <p>PLATAFORMA DE APOYO 2026<br>Profesionalizando la solidaridad.</p>
-</div>
+<footer>
+    <p>PLATAFORMA DE APOYO A OLLAS COMUNES - PERÚ 2026</p>
+    <p><em>Iniciando un camino de estabilidad y libertad financiera.</em></p>
+</footer>
 
 <script>
-    function openSession(evt, sessionId) {
-        var i, content, tabs;
-        content = document.getElementsByClassName("section-content");
+    function openTab(evt, tabId) {
+        var i, content, links;
+        content = document.getElementsByClassName("session-card");
         for (i = 0; i < content.length; i++) {
             content[i].classList.remove("active");
         }
-        tabs = document.getElementsByClassName("nav-btn");
-        for (i = 0; i < tabs.length; i++) {
-            tabs[i].classList.remove("active");
+        links = document.getElementsByClassName("tab-link");
+        for (i = 0; i < links.length; i++) {
+            links[i].classList.remove("active");
         }
-        document.getElementById(sessionId).classList.add("active");
+        document.getElementById(tabId).classList.add("active");
         evt.currentTarget.classList.add("active");
-        window.scrollTo(0, 0);
+        window.scrollTo(0,0);
     }
 
-    function calcRacion() {
-        const gasto = parseFloat(document.getElementById('gastoTotal').value) || 0;
-        const raciones = parseFloat(document.getElementById('raciones').value) || 0;
-        if(raciones > 0) {
-            const costo = gasto / raciones;
-            document.getElementById('resRacion').innerHTML = "Costo por ración: S/ " + costo.toFixed(2);
+    function calcAhorro() {
+        const kilo = parseFloat(document.getElementById('precioKilo').value) || 0;
+        const saco = parseFloat(document.getElementById('precioSaco').value) || 0;
+        if(kilo > saco) {
+            const ahorro = kilo - saco;
+            const ahorroSaco = ahorro * 50; // Asumiendo saco de 50kg
+            document.getElementById('resAhorro').innerText = "Ahorras S/ " + ahorro.toFixed(2) + " por kilo. ¡S/ " + ahorroSaco.toFixed(2) + " por saco!";
         } else {
-            document.getElementById('resRacion').innerHTML = "Ingrese raciones válidas";
+            document.getElementById('resAhorro').innerText = "Revisa los precios ingresados.";
         }
     }
 </script>
