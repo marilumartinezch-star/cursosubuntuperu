@@ -3,278 +3,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administración Profesional de Ollas Comunes</title>
+    <title>Gestión Profesional de Ollas Comunes</title>
     <style>
         :root {
-            --rojo-corporativo: #8B0000;
-            --rojo-interactivo: #FF3232;
+            --rojo-oscuro: #8B0000;
+            --rojo-claro: #FF4D4D;
             --blanco: #FFFFFF;
-            --verde-exito: #2ecc71;
-            --fondo-gris: #F2F2F2;
+            --fondo: #F4F7F6;
+            --verde: #2ECC71;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--fondo-gris); color: #333; overflow-x: hidden; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--fondo); color: #333; }
         
-        /* Cabecera con Movimiento */
         header {
-            background: linear-gradient(135deg, var(--rojo-corporativo), var(--rojo-interactivo));
+            background: linear-gradient(135deg, var(--rojo-oscuro), var(--rojo-claro));
             color: white; padding: 40px 20px; text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .motto { font-style: italic; font-size: 1rem; opacity: 0.9; display: block; margin-top: 10px; }
 
-        /* Navegación Táctil */
         nav {
             display: flex; overflow-x: auto; background: white; sticky: top; top: 0; z-index: 1000;
-            border-bottom: 4px solid var(--rojo-interactivo);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-bottom: 3px solid var(--rojo-claro);
         }
 
         .tab-btn {
-            padding: 20px; cursor: pointer; font-weight: bold; color: var(--rojo-corporativo);
+            padding: 20px; cursor: pointer; font-weight: bold; color: var(--rojo-oscuro);
             border: none; background: none; white-space: nowrap; transition: 0.3s; flex: 1;
         }
 
-        .tab-btn.active { background: var(--rojo-corporativo); color: white; transform: scale(1.05); }
+        .tab-btn.active { background: var(--rojo-oscuro); color: white; }
 
-        .container { max-width: 900px; margin: 20px auto; padding: 15px; }
+        .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
 
-        .session-panel { display: none; animation: fadeIn 0.6s ease; }
+        .session-panel { display: none; animation: fadeIn 0.5s ease; }
         .session-panel.active { display: block; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cronómetro Visual */
-        .timer-badge {
-            background: #333; color: var(--rojo-interactivo); padding: 8px 15px;
-            border-radius: 50px; font-weight: bold; font-family: monospace;
-            border: 2px solid var(--rojo-interactivo); float: right;
-        }
+        /* Estilos de Sección Claros */
+        .card-obj { background: #FFF; border-left: 8px solid var(--rojo-claro); padding: 20px; border-radius: 8px; margin-bottom: 25px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .card-obj h3 { margin: 0 0 10px 0; color: var(--rojo-claro); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
 
-        /* Conceptos que Giran (Interactivos) */
-        .concept-card {
-            background: white; border-radius: 15px; padding: 20px; margin: 15px 0;
-            border-left: 8px solid var(--rojo-interactivo); cursor: pointer;
-            transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        }
+        /* Conceptos Interactivos (Flip Cards) */
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 25px 0; }
+        .flip-card { height: 120px; perspective: 1000px; cursor: pointer; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.active .flip-card-inner { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 12px; padding: 15px; text-align: center; box-sizing: border-box; font-weight: bold; }
+        .front { background: var(--rojo-oscuro); color: white; border: 2px solid var(--rojo-claro); }
+        .back { background: white; color: var(--rojo-oscuro); transform: rotateY(180deg); border: 2px solid var(--rojo-oscuro); font-size: 0.9rem; }
 
-        .concept-card:hover { transform: translateX(10px); background: #FFF9F9; }
+        /* Dinámica de la Sesión */
+        .dinamica-box { background: #2C3E50; color: white; padding: 30px; border-radius: 15px; position: relative; overflow: hidden; }
+        .dinamica-box h3 { color: var(--rojo-claro); margin-top: 0; }
+        .dinamica-box label { display: block; margin-top: 15px; font-weight: bold; }
+        
+        input, select { width: 100%; padding: 15px; margin-top: 8px; border-radius: 8px; border: none; font-size: 1.1rem; }
+        
+        .btn-check { background: var(--rojo-claro); color: white; border: none; padding: 18px; width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 20px; font-size: 1rem; transition: 0.2s; }
+        .btn-check:active { transform: scale(0.98); }
 
-        /* Simuladores de Cálculo */
-        .simulador {
-            background: #1e1e1e; color: #fff; padding: 30px; border-radius: 20px;
-            margin-top: 30px; border: 3px solid var(--rojo-interactivo);
-        }
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; text-align: center; font-weight: bold; }
+        .ok { background: var(--verde); color: white; }
+        .error { background: #E74C3C; color: white; }
 
-        .simulador h4 { color: var(--rojo-interactivo); margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 10px; }
+        .cronometro { float: right; background: #333; color: #FFF; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; }
 
-        input, select { 
-            width: 100%; padding: 15px; margin: 15px 0; border-radius: 10px; border: none; font-size: 1.2rem;
-            box-sizing: border-box; background: #fff;
-        }
-
-        .btn-validar {
-            background: var(--rojo-interactivo); color: white; border: none; padding: 20px;
-            width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
-            text-transform: uppercase; letter-spacing: 1px;
-        }
-
-        .feedback {
-            margin-top: 20px; padding: 20px; border-radius: 10px; display: none;
-            text-align: center; font-weight: bold; animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
-
-        .success { background: var(--verde-exito); color: white; }
-        .error { background: #e74c3c; color: white; }
-
-        footer { text-align: center; padding: 50px; color: #888; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>CURSO DE FINANZAS PARA LIDERESAS</h1>
+    <h1>ADMINISTRACIÓN DE OLLAS COMUNES</h1>
     <span class="motto">"Cosechando libertad, sembrando estabilidad"</span>
 </header>
 
 <nav>
-    <button class="tab-btn active" onclick="openSesion(event, 's0')">INTRO</button>
-    <button class="tab-btn" onclick="openSesion(event, 's1')">S1: CAJA</button>
-    <button class="tab-btn" onclick="openSesion(event, 's2')">S2: MERCADO</button>
-    <button class="tab-btn" onclick="openSesion(event, 's3')">S3: CUENTAS</button>
-    <button class="tab-btn" onclick="openSesion(event, 's4')">S4: FUTURO</button>
+    <button class="tab-btn active" onclick="showSession(event, 's0')">INICIO</button>
+    <button class="tab-btn" onclick="showSession(event, 's1')">SESIÓN 1</button>
+    <button class="tab-btn" onclick="showSession(event, 's2')">SESIÓN 2</button>
+    <button class="tab-btn" onclick="showSession(event, 's3')">SESIÓN 3</button>
+    <button class="tab-btn" onclick="showSession(event, 's4')">SESIÓN 4</button>
 </nav>
 
 <div class="container">
 
     <section id="s0" class="session-panel active">
-        <h2>Bienvenida al Fortalecimiento Comunal</h2>
-        <p>Haga clic en los pilares para conocer nuestro compromiso de hoy:</p>
+        <div class="card-obj">
+            <h3>Objetivo de la Sesión</h3>
+            <p>Presentar la ruta de aprendizaje y establecer las normas de convivencia profesional entre organizadoras.</p>
+        </div>
         
-        <div class="concept-card" onclick="alert('El respeto es la base de nuestra organización.')">
-            <h3>🤝 Respeto Mutuo</h3>
-            <p>Valoramos la voz y experiencia de cada administradora.</p>
-        </div>
-        <div class="concept-card" onclick="alert('Sesiones de 60 minutos exactos para respetar sus labores.')">
-            <h3>⏱️ Puntualidad de Acero</h3>
-            <p>Iniciamos y terminamos a la hora. Tiempo es dinero para la olla.</p>
-        </div>
-        <div class="concept-card" onclick="alert('La transparencia evita conflictos en la vecindad.')">
-            <h3>💎 Transparencia Total</h3>
-            <p>La honestidad es el ingrediente que no puede faltar.</p>
+        <p><strong>Toque las tarjetas para ver nuestras reglas de oro:</strong></p>
+        <div class="concept-grid">
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">CONVIVENCIA</div>
+                    <div class="back">Respeto total a la opinión de cada compañera.</div>
+                </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">TIEMPO</div>
+                    <div class="back">Cada sesión dura 60 minutos exactos.</div>
+                </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">VALOR</div>
+                    <div class="back">La transparencia es el motor de la olla.</div>
+                </div>
+            </div>
         </div>
     </section>
 
     <section id="s1" class="session-panel">
-        <div class="timer-badge">60:00 MIN</div>
-        <h2>S1: El Control de mi Caja</h2>
-        
-        <h3>Estructura de la Hora:</h3>
-        <ul>
-            <li><strong>15 min:</strong> ¿Qué es entrada y salida? (Dinámica visual).</li>
-            <li><strong>30 min:</strong> Práctica de cuadre con raciones reales.</li>
-            <li><strong>15 min:</strong> Resolución de dudas y cierre.</li>
-        </ul>
+        <span class="cronometro">60 MINUTOS</span>
+        <div class="card-obj">
+            <h3>Objetivo de la Sesión</h3>
+            <p>Dominar el registro diario de caja para identificar cuánto dinero real tiene la olla al cerrar el día.</p>
+        </div>
 
-        <div class="simulador">
-            <h4>🕹️ PRÁCTICA: ¿Cuadra o no cuadra?</h4>
-            <p>Usted inicia el día con <strong>S/ 60</strong>. Vende 50 raciones a <strong>S/ 2.00</strong> cada una. Luego compra carne por <strong>S/ 110</strong>. ¿Cuánto debe haber en el bolsillo al cerrar?</p>
-            <input type="number" id="calc1" placeholder="Escriba su saldo final aquí...">
-            <button class="btn-validar" onclick="valS1()">PROBAR RESULTADO</button>
-            <div id="res1" class="feedback"></div>
+        <p><strong>Conceptos Clave (Toque para descubrir):</strong></p>
+        <div class="concept-grid">
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">SALDO INICIAL</div>
+                    <div class="back">Es el dinero que sobró del día anterior.</div>
+                </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">SALDO FINAL</div>
+                    <div class="back">Es el resultado de: Inicio + Ingresos - Gastos.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dinamica-box">
+            <h3>🛠️ Dinámica: El Cuadre de Hoy</h3>
+            <p>Caso: La olla inicia con S/ 45. Se venden 60 raciones a S/ 2.00 c/u. Se gastan S/ 95 en el mercado. ¿Cuánto dinero debe haber en caja?</p>
+            <label>Resultado del cálculo (S/):</label>
+            <input type="number" id="ans1" placeholder="Ej: 50">
+            <button class="btn-check" onclick="check1()">VALIDAR CUADRE</button>
+            <div id="f1" class="feedback"></div>
         </div>
     </section>
 
     <section id="s2" class="session-panel">
-        <div class="timer-badge">60:00 MIN</div>
-        <h2>S2: Ahorro Inteligente en el Mercado</h2>
-        
-        <h3>Estructura de la Hora:</h3>
-        <ul>
-            <li><strong>20 min:</strong> Diferencia entre precio minorista y mayorista.</li>
-            <li><strong>30 min:</strong> Cálculo de ahorro por sacos (Dinámica interactiva).</li>
-            <li><strong>10 min:</strong> Planificación de compras semanales.</li>
-        </ul>
+        <span class="cronometro">60 MINUTOS</span>
+        <div class="card-obj">
+            <h3>Objetivo de la Sesión</h3>
+            <p>Aprender a calcular el ahorro por volumen para optimizar el presupuesto semanal de insumos.</p>
+        </div>
 
-        <div class="simulador">
-            <h4>🛒 RETO: El Ahorro del Saco</h4>
-            <p>El kilo de arroz suelto está <strong>S/ 4.80</strong>. El saco de 50kg está <strong>S/ 200</strong>. ¿Cuánto ahorra la olla si compra el saco completo en lugar de comprar por kilos?</p>
-            <input type="number" id="calc2" placeholder="Ingrese el ahorro total en soles...">
-            <button class="btn-validar" onclick="valS2()">CALCULAR AHORRO</button>
-            <div id="res2" class="feedback"></div>
+        <p><strong>Conceptos Clave:</strong></p>
+        <div class="concept-grid">
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">MAYORISTA</div>
+                    <div class="back">Comprar por saco reduce el precio por cada kilo.</div>
+                </div>
+            </div>
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">COSTO UNITARIO</div>
+                    <div class="back">Es lo que realmente nos cuesta una sola ración.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dinamica-box">
+            <h3>🛠️ Dinámica: El Reto del Arroz</h3>
+            <p>1 kilo de arroz cuesta S/ 4.60. El saco de 50kg cuesta S/ 195. ¿Cuánto dinero ahorra la olla si compra el saco completo?</p>
+            <label>Ahorro total (S/):</label>
+            <input type="number" id="ans2" placeholder="Ej: 20">
+            <button class="btn-check" onclick="check2()">CALCULAR AHORRO</button>
+            <div id="f2" class="feedback"></div>
         </div>
     </section>
 
     <section id="s3" class="session-panel">
-        <div class="timer-badge">60:00 MIN</div>
-        <h2>S3: Transparencia y Rendición</h2>
-        
-        <h3>Estructura de la Hora:</h3>
-        <ul>
-            <li><strong>20 min:</strong> ¿Cómo anotar gastos sin boleta de forma legal?</li>
-            <li><strong>30 min:</strong> Simulación de Asamblea (Resolución de conflictos).</li>
-            <li><strong>10 min:</strong> Uso de la Pizarra de Transparencia.</li>
-        </ul>
+        <span class="cronometro">60 MINUTOS</span>
+        <div class="card-obj">
+            <h3>Objetivo de la Sesión</h3>
+            <p>Implementar un sistema de sustento de gastos para evitar conflictos y desconfianza en la comunidad.</p>
+        </div>
 
-        <div class="simulador">
-            <h4>📢 CASO ÉTICO: El Pasaje</h4>
-            <p>Se pagó <strong>S/ 10</strong> a un transportista para traer las donaciones, pero él no da boleta. ¿Qué decisión toma usted?</p>
-            <select id="calc3">
-                <option value="">-- Seleccione una opción --</option>
-                <option value="X">Poner que el arroz costó 10 soles más.</option>
-                <option value="OK">Llenar un vale interno y pedir firma de la Tesorera.</option>
-                <option value="X">No registrar el gasto y que falte dinero.</option>
+        <div class="concept-grid">
+            <div class="flip-card" onclick="this.classList.toggle('active')">
+                <div class="flip-card-inner">
+                    <div class="front">VALE INTERNO</div>
+                    <div class="back">Documento que firma la directiva cuando no hay boleta.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dinamica-box">
+            <h3>🛠️ Dinámica: Transparencia en Acción</h3>
+            <p>Se pagaron S/ 8 por un taxi para traer donaciones. El chofer no da boleta. ¿Qué hace usted?</p>
+            <select id="ans3">
+                <option value="">Seleccione una opción...</option>
+                <option value="A">No lo anota para no tener problemas.</option>
+                <option value="B">Anota el gasto y pide que la presidenta firme el vale.</option>
+                <option value="C">Dice que las verduras costaron S/ 8 más.</option>
             </select>
-            <button class="btn-validar" onclick="valS3()">VALIDAR ACCIÓN</button>
-            <div id="res3" class="feedback"></div>
+            <button class="btn-check" onclick="check3()">TOMAR DECISIÓN</button>
+            <div id="f3" class="feedback"></div>
         </div>
     </section>
 
     <section id="s4" class="session-panel">
-        <div class="timer-badge">60:00 MIN</div>
-        <h2>S4: Mi Fondo de Reserva</h2>
-        
-        <h3>Estructura de la Hora:</h3>
-        <ul>
-            <li><strong>15 min:</strong> ¿Por qué la olla debe tener una ganancia mínima?</li>
-            <li><strong>35 min:</strong> Cálculo de metas (Hornilla, local, menaje).</li>
-            <li><strong>10 min:</strong> Graduación y entrega de diplomas digitales.</li>
-        </ul>
+        <span class="cronometro">60 MINUTOS</span>
+        <div class="card-obj">
+            <h3>Objetivo de la Sesión</h3>
+            <p>Calcular la rentabilidad necesaria para crear un fondo de emergencia y mejoras de la olla.</p>
+        </div>
 
-        <div class="simulador">
-            <h4>💰 DINÁMICA: La Meta de la Hornilla</h4>
-            <p>Queremos comprar una hornilla de <strong>S/ 150</strong>. Si guardamos <strong>S/ 0.50</strong> por ración vendida... ¿Cuántas raciones debemos vender para llegar a la meta?</p>
-            <input type="number" id="calc4" placeholder="Ingrese el número de raciones...">
-            <button class="btn-check btn-validar" onclick="valS4()">CALCULAR META</button>
-            <div id="res4" class="feedback"></div>
+        <div class="dinamica-box">
+            <h3>🛠️ Dinámica: Meta de Ahorro</h3>
+            <p>La olla necesita S/ 120 para arreglar la cocina. Si guardamos S/ 0.40 por cada ración vendida...</p>
+            <label>¿Cuántas raciones debemos vender para llegar a la meta?</label>
+            <input type="number" id="ans4" placeholder="Ingrese raciones">
+            <button class="btn-check" onclick="check4()">CALCULAR META</button>
+            <div id="f4" class="feedback"></div>
         </div>
     </section>
 
 </div>
 
 <footer>
-    <p>PROGRAMA DE FORTALECIMIENTO DE OLLAS COMUNES - 2026</p>
+    <p style="text-align: center; color: #888; padding: 30px;">© 2026 - Gestión Profesional para Ollas Comunes</p>
 </footer>
 
 <script>
-    function openSesion(evt, sesionId) {
+    function showSession(e, id) {
         document.querySelectorAll('.session-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.getElementById(sesionId).classList.add('active');
-        evt.currentTarget.classList.add('active');
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
         window.scrollTo(0,0);
     }
 
-    function valS1() {
-        const v = document.getElementById('calc1').value;
-        const f = document.getElementById('res1');
+    function check1() {
+        const v = document.getElementById('ans1').value;
+        const f = document.getElementById('f1');
         f.style.display = "block";
-        if(v == 50) {
-            f.innerHTML = "¡EXCELENTE! (60 + 100 - 110 = 50). Usted domina su caja.";
-            f.className = "feedback success";
+        if(v == 70) {
+            f.innerHTML = "¡EXCELENTE! (45 + 120 - 95 = 70). Caja cuadrada correctamente.";
+            f.className = "feedback ok";
         } else {
-            f.innerHTML = "Casi... Recuerde: Saldo Inicial + Ventas - Compras.";
+            f.innerHTML = "Intenta de nuevo: Suma 45 + 120 y réstale 95.";
             f.className = "feedback error";
         }
     }
 
-    function valS2() {
-        const v = document.getElementById('calc2').value;
-        const f = document.getElementById('res2');
+    function check2() {
+        const v = document.getElementById('ans2').value;
+        const f = document.getElementById('f2');
         f.style.display = "block";
-        if(v == 40) {
-            f.innerHTML = "¡CORRECTO! Comprar por kilos saldría S/ 240. Comprar el saco a S/ 200 ahorra S/ 40.";
-            f.className = "feedback success";
+        if(v == 35) {
+            f.innerHTML = "¡CORRECTO! Comprar por kilos saldría S/ 230. Ahorras S/ 35.";
+            f.className = "feedback ok";
         } else {
-            f.innerHTML = "Pista: Multiplique 4.80 x 50 y luego reste el precio del saco.";
+            f.innerHTML = "Pista: Multiplica 4.60 x 50 y reste el costo del saco (195).";
             f.className = "feedback error";
         }
     }
 
-    function valS3() {
-        const v = document.getElementById('calc3').value;
-        const f = document.getElementById('res3');
+    function check3() {
+        const v = document.getElementById('ans3').value;
+        const f = document.getElementById('f3');
         f.style.display = "block";
-        if(v === "OK") {
-            f.innerHTML = "¡MUY BIEN! El vale interno con firma es la forma legal y honesta de sustentar gastos.";
-            f.className = "feedback success";
+        if(v == "B") {
+            f.innerHTML = "¡MUY BIEN! La honestidad y el sustento son la base de su liderazgo.";
+            f.className = "feedback ok";
         } else {
-            f.innerHTML = "¡CUIDADO! Nunca oculte ni infle precios. Eso genera desconfianza.";
+            f.innerHTML = "Cuidado. Mentir o no registrar genera desconfianza y huecos en su caja.";
             f.className = "feedback error";
         }
     }
 
-    function valS4() {
-        const v = document.getElementById('calc4').value;
-        const f = document.getElementById('res4');
+    function check4() {
+        const v = document.getElementById('ans4').value;
+        const f = document.getElementById('f4');
         f.style.display = "block";
         if(v == 300) {
-            f.innerHTML = "¡META LOGRADA! Vendiendo 300 raciones habremos guardado S/ 150 para la hornilla.";
-            f.className = "feedback success";
+            f.innerHTML = "¡META LOGRADA! 300 raciones x 0.40 = S/ 120. ¡Cocina nueva!";
+            f.className = "feedback ok";
         } else {
-            f.innerHTML = "Intente de nuevo. Divida el precio de la hornilla (150) entre el ahorro por plato (0.50).";
+            f.innerHTML = "Divide el costo (120) entre el ahorro por plato (0.40).";
             f.className = "feedback error";
         }
     }
