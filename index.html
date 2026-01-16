@@ -3,302 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Ollas Comunes - Curso Interactivo</title>
+    <title>Finanzas para Ollas Comunes - Práctica Interactiva</title>
     <style>
         :root {
-            --rojo-principal: #9B0000;
-            --rojo-brillante: #FF3232;
+            --rojo-oscuro: #8B0000;
+            --rojo-claro: #FF4D4D;
             --blanco: #FFFFFF;
-            --gris-fondo: #FDFDFD;
-            --verde-ok: #27AE60;
+            --gris-fondo: #F4F4F4;
+            --verde-exito: #28a745;
         }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            background-color: var(--gris-fondo);
-            color: #333;
-        }
-
-        /* Cabecera Profesional */
-        header {
-            background: linear-gradient(135deg, var(--rojo-principal), var(--rojo-brillante));
-            color: white;
-            padding: 30px 15px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-
-        .motto { font-style: italic; font-size: 0.9rem; opacity: 0.9; display: block; margin-top: 5px; }
-
-        /* Navegación por Pestañas */
-        nav {
-            display: flex;
-            background: white;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            overflow-x: auto;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            font-weight: bold;
-            color: var(--rojo-principal);
-            border-bottom: 4px solid transparent;
-            min-width: 100px;
-        }
-
-        .tab.active {
-            color: var(--rojo-brillante);
-            border-bottom: 4px solid var(--rojo-brillante);
-            background: #FFF5F5;
-        }
-
-        /* Contenedor de Sesiones */
-        .container { max-width: 800px; margin: 20px auto; padding: 15px; }
-
-        .session-content { display: none; animation: fadeIn 0.4s ease; }
-        .session-content.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Tarjetas de Contenido */
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-            border: 1px solid #EEE;
-        }
-
-        h2 { color: var(--rojo-principal); margin-top: 0; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--gris-fondo); color: #333; }
         
-        .badge-objetivo {
-            background: #FFF0F0;
-            color: var(--rojo-principal);
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
-            border-left: 5px solid var(--rojo-brillante);
-            margin-bottom: 20px;
+        header {
+            background: linear-gradient(135deg, var(--rojo-oscuro), var(--rojo-claro));
+            color: white; padding: 30px 15px; text-align: center;
         }
 
-        /* Dinámicas Iterativas */
-        .interactive-zone {
-            background: #F4F6F7;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px dashed #CCC;
+        .motto { font-style: italic; font-size: 0.9rem; display: block; margin-top: 5px; }
+
+        nav {
+            display: flex; overflow-x: auto; background: white; sticky: top; top: 0; z-index: 100;
+            border-bottom: 3px solid var(--rojo-claro);
         }
 
-        .btn-interact {
-            background: var(--rojo-principal);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            font-size: 1rem;
+        .nav-btn {
+            padding: 15px 20px; cursor: pointer; font-weight: bold; color: var(--rojo-oscuro);
+            border: none; background: none; white-space: nowrap; transition: 0.3s;
         }
 
-        .btn-interact:hover { background: var(--rojo-brillante); }
+        .nav-btn.active { background: #FFF0F0; border-bottom: 4px solid var(--rojo-claro); }
+
+        .container { max-width: 700px; margin: 20px auto; padding: 15px; }
+
+        .card {
+            display: none; background: white; padding: 25px; border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: fadeIn 0.4s;
+        }
+
+        .card.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .objetivo-box {
+            background: #FFF5F5; border-left: 5px solid var(--rojo-claro);
+            padding: 15px; margin-bottom: 20px; font-size: 0.95rem;
+        }
+
+        .concept-item { background: #eee; padding: 10px; border-radius: 5px; margin: 5px 0; font-size: 0.9rem; }
+
+        /* Estilos de la Dinámica de Cálculo */
+        .dinamica-area {
+            background: #2D3436; color: white; padding: 20px; border-radius: 12px; margin-top: 20px;
+        }
+
+        .dinamica-area h4 { color: var(--rojo-claro); margin-top: 0; }
 
         input, select {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 8px;
-            border: 1px solid #DDD;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; font-size: 1rem;
         }
 
-        .feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-            font-weight: bold;
-            text-align: center;
+        .btn-validar {
+            background: var(--rojo-claro); color: white; border: none; padding: 15px;
+            width: 100%; border-radius: 8px; font-weight: bold; cursor: pointer;
         }
 
-        footer { text-align: center; padding: 30px; color: #999; font-size: 0.8rem; }
+        .resultado-msg {
+            margin-top: 15px; padding: 10px; border-radius: 8px; display: none; font-weight: bold; text-align: center;
+        }
+
+        footer { text-align: center; padding: 20px; color: #777; font-size: 0.8rem; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>CURSO PARA ADMINISTRADORAS</h1>
+    <h1>CURSO: FINANZAS DE MI OLLA</h1>
     <span class="motto">"Cosechando libertad, sembrando estabilidad"</span>
 </header>
 
 <nav>
-    <div class="tab active" onclick="showTab(event, 's0')">INICIO</div>
-    <div class="tab" onclick="showTab(event, 's1')">SESIÓN 1</div>
-    <div class="tab" onclick="showTab(event, 's2')">SESIÓN 2</div>
-    <div class="tab" onclick="showTab(event, 's3')">SESIÓN 3</div>
-    <div class="tab" onclick="showTab(event, 's4')">SESIÓN 4</div>
+    <button class="nav-btn active" onclick="showTab('s0')">INICIO</button>
+    <button class="nav-btn" onclick="showTab('s1')">S1: MI CAJA</button>
+    <button class="nav-btn" onclick="showTab('s2')">S2: EL MERCADO</button>
+    <button class="nav-btn" onclick="showTab('s3')">S3: CUENTAS CLARAS</button>
+    <button class="nav-btn" onclick="showTab('s4')">S4: MI AHORRO</button>
 </nav>
 
 <div class="container">
 
-    <section id="s0" class="session-content active">
-        <div class="card">
-            <h2>¡Bienvenida, Lideresa!</h2>
-            <div class="badge-objetivo">Objetivo: Presentar el curso y nuestras reglas de trabajo en equipo.</div>
-            <p>Este curso de 4 sesiones le dará el poder de controlar los números de su olla para que nunca falte el alimento.</p>
-            
-            <h3>Reglas de Coexistencia</h3>
-            <ul style="line-height: 2;">
-                <li><strong>Escucha Activa:</strong> Respeto a la palabra de la socia.</li>
-                <li><strong>Puntualidad:</strong> Respetamos el tiempo de todas.</li>
-                <li><strong>Transparencia:</strong> Cuentas claras, comunidad feliz.</li>
-                <li><strong>Colaboración:</strong> Juntas somos más fuertes.</li>
-            </ul>
+    <section id="s0" class="card active">
+        <h2>Bienvenida Administradora</h2>
+        <div class="objetivo-box">
+            <strong>Objetivo:</strong> Presentar el curso de 4 sesiones y establecer las reglas de respeto y transparencia para nuestras ollas.
+        </div>
+        <h3>Nuestros Compromisos:</h3>
+        <ul>
+            <li>Respeto a la opinión de la otra.</li>
+            <li>Puntualidad en las sesiones.</li>
+            <li><strong>Transparencia:</strong> El pilar de la Olla Común.</li>
+        </ul>
+        <p><em>FINLINGO recién está empezando para apoyarlas.</em></p>
+    </section>
+
+    <section id="s1" class="card">
+        <h2>Sesión 1: ¿Cuánto dinero tengo hoy?</h2>
+        <div class="objetivo-box">
+            <strong>Objetivo:</strong> Aprender a calcular el saldo real sumando ingresos y restando gastos del día.
+        </div>
+        <div class="concept-item"><strong>Ingreso:</strong> Dinero por raciones o donaciones.</div>
+        <div class="concept-item"><strong>Egreso:</strong> Dinero gastado en compras o servicios.</div>
+
+        <div class="dinamica-area">
+            <h4>Dinámica: Cuadre de Caja Diaria</h4>
+            <p>Caso: Empezamos con S/ 20. Vendimos 50 raciones a S/ 2.00 cada una. Gastamos S/ 70 en el mercado. ¿Cuánto queda en caja?</p>
+            <label>Escriba su cálculo final (S/):</label>
+            <input type="number" id="calc1" placeholder="Ingrese el resultado">
+            <button class="btn-validar" onclick="validarS1()">Verificar mi cuadre</button>
+            <div id="res1" class="resultado-msg"></div>
         </div>
     </section>
 
-    <section id="s1" class="session-content">
-        <div class="card">
-            <h2>1. El Control de mi Caja</h2>
-            <div class="badge-objetivo">Objetivo: Diferenciar qué dinero es de la olla y cuánto podemos gastar.</div>
-            
-            <h3>Conceptos Básicos:</h3>
-            <p><strong>Ingreso:</strong> Dinero que entra (raciones, cuotas).<br>
-            <strong>Egreso:</strong> Dinero que sale (gas, arroz, pasajes).</p>
+    <section id="s2" class="card">
+        <h2>Sesión 2: Compras que ahorran</h2>
+        <div class="objetivo-box">
+            <strong>Objetivo:</strong> Practicar el cálculo de ahorro al comprar por saco vs. por kilo suelto.
+        </div>
+        <div class="concept-item"><strong>Precio Mayorista:</strong> Comprar más para que cueste menos.</div>
 
-            <div class="interactive-zone">
-                <h4>Simulador de Caja Diaria</h4>
-                <p>Caso: Tiene S/ 40. Hoy vendió raciones por S/ 80 y gastó S/ 90 en carne. ¿Cuánto le queda?</p>
-                <input type="number" id="ans1" placeholder="Ingrese el saldo final">
-                <button class="btn-interact" onclick="checkS1()">Comprobar mi Saldo</button>
-                <div id="f1" class="feedback"></div>
-            </div>
+        <div class="dinamica-area">
+            <h4>Dinámica: El Reto del Arroz</h4>
+            <p>1 kilo de arroz cuesta S/ 4.50. El saco de 50 kilos cuesta S/ 190.00.</p>
+            <label>¿Cuánto ahorra la olla si compra el saco en vez de 50 kilos sueltos?</label>
+            <input type="number" id="calc2" placeholder="Ingrese el ahorro total">
+            <button class="btn-validar" onclick="validarS2()">Calcular Ahorro</button>
+            <div id="res2" class="resultado-msg"></div>
         </div>
     </section>
 
-    <section id="s2" class="session-content">
-        <div class="card">
-            <h2>2. Compras Inteligentes</h2>
-            <div class="badge-objetivo">Objetivo: Aprender a ahorrar comprando por sacos y volumen.</div>
-            
-            <div class="interactive-zone">
-                <h4>Calculadora de Ahorro</h4>
-                <p>El kilo de arroz suelto está S/ 4.20. El saco de 50kg está S/ 175.00.</p>
-                <label>¿Cuánto ahorra si compra el saco entero?</label>
-                <input type="number" id="ans2" placeholder="Ingrese el ahorro total">
-                <button class="btn-interact" onclick="checkS2()">Verificar Ahorro</button>
-                <div id="f2" class="feedback"></div>
-            </div>
+    <section id="s3" class="card">
+        <h2>Sesión 3: Rendición de Cuentas</h2>
+        <div class="objetivo-box">
+            <strong>Objetivo:</strong> Organizar los gastos para explicar a los vecinos en qué se usó el dinero.
+        </div>
+        
+        <div class="dinamica-area">
+            <h4>Dinámica: ¿Cómo informamos?</h4>
+            <p>Se compró: Pollo (S/ 50), Verduras (S/ 20), Pasajes (S/ 5). El total fue S/ 75, pero perdió la boleta del pasaje.</p>
+            <label>¿Qué es lo más honesto para la administración?</label>
+            <select id="calc3">
+                <option value="">Seleccione...</option>
+                <option value="A">Decir que el pollo costó S/ 55.</option>
+                <option value="B">Explicar el gasto del pasaje aunque no haya boleta.</option>
+                <option value="C">No poner el gasto y que falte dinero.</option>
+            </select>
+            <button class="btn-validar" onclick="validarS3()">Validar Acción</button>
+            <div id="res3" class="resultado-msg"></div>
         </div>
     </section>
 
-    <section id="s3" class="session-content">
-        <div class="card">
-            <h2>3. Rendición de Cuentas</h2>
-            <div class="badge-objetivo">Objetivo: Mostrar resultados para evitar problemas con los vecinos.</div>
-            
-            <div class="interactive-zone">
-                <h4>Dilema de la Administradora</h4>
-                <p>Se perdió una boleta de S/ 10 de las verduras. ¿Qué hace?</p>
-                <select id="ans3">
-                    <option value="">Seleccione una opción...</option>
-                    <option value="X">No digo nada para que no piensen mal.</option>
-                    <option value="OK">Informo a la asamblea y pido que firmen un vale de gasto.</option>
-                </select>
-                <button class="btn-interact" onclick="checkS3()">Tomar Decisión</button>
-                <div id="f3" class="feedback"></div>
-            </div>
+    <section id="s4" class="card">
+        <h2>Sesión 4: Un fondo para emergencias</h2>
+        <div class="objetivo-box">
+            <strong>Objetivo:</strong> Calcular un pequeño margen de ganancia para arreglar la cocina o el local.
         </div>
-    </section>
 
-    <section id="s4" class="session-content">
-        <div class="card">
-            <h2>4. El Futuro de mi Olla</h2>
-            <div class="badge-objetivo">Objetivo: Crear un pequeño fondo para emergencias o mejoras.</div>
-            
-            <div class="interactive-zone">
-                <h4>Idea de Autogestión</h4>
-                <p>¿Qué actividad podría hacer la olla para ganar S/ 20 extras?</p>
-                <input type="text" id="ans4" placeholder="Ej: Venta de postres, rifa, etc.">
-                <button class="btn-interact" onclick="checkS4()">Validar Idea</button>
-                <div id="f4" class="feedback"></div>
-            </div>
+        <div class="dinamica-area">
+            <h4>Dinámica: El fondo de reserva</h4>
+            <p>Si la olla quiere ahorrar S/ 0.20 por cada ración vendida para comprar una hornilla nueva...</p>
+            <label>¿Cuánto habremos ahorrado después de vender 100 raciones?</label>
+            <input type="number" id="calc4" placeholder="Ingrese el total guardado">
+            <button class="btn-validar" onclick="validarS4()">Calcular mi meta</button>
+            <div id="res4" class="resultado-msg"></div>
         </div>
     </section>
 
 </div>
 
 <footer>
-    <p>© 2026 - Trabajando por la Seguridad Alimentaria en el Perú</p>
+    <p>FINANZAS BÁSICAS PARA OLLAS COMUNES - 2026</p>
 </footer>
 
 <script>
-    function showTab(evt, sessionId) {
-        document.querySelectorAll('.session-content').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(sessionId).classList.add('active');
-        evt.currentTarget.classList.add('active');
+    function showTab(tabId) {
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        event.currentTarget.classList.add('active');
         window.scrollTo(0,0);
     }
 
-    function checkS1() {
-        const val = document.getElementById('ans1').value;
-        const f = document.getElementById('f1');
-        f.style.display = "block";
-        if(val == 30) {
-            f.innerHTML = "¡Excelente! (40 + 80 - 90 = 30). Usted tiene el control.";
-            f.style.background = "#D4EDDA"; f.style.color = "#155724";
+    function validarS1() {
+        const r = document.getElementById('calc1').value;
+        const msg = document.getElementById('res1');
+        msg.style.display = "block";
+        if(r == 50) {
+            msg.innerHTML = "¡Excelente! 20 (inicio) + 100 (ventas) - 70 (mercado) = S/ 50.";
+            msg.style.background = "#D4EDDA"; msg.style.color = "#155724";
         } else {
-            f.innerHTML = "Casi. Recuerde: Saldo Inicial + Ingresos - Egresos.";
-            f.style.background = "#F8D7DA"; f.style.color = "#721C24";
+            msg.innerHTML = "Vuelva a sumar los ingresos (20+100) y reste el gasto (70).";
+            msg.style.background = "#F8D7DA"; msg.style.color = "#721C24";
         }
     }
 
-    function checkS2() {
-        const val = document.getElementById('ans2').value;
-        const f = document.getElementById('f2');
-        f.style.display = "block";
-        if(val == 35) {
-            f.innerHTML = "¡Correcto! (210 - 175 = 35). ¡S/ 35 soles más para la olla!";
-            f.style.background = "#D4EDDA"; f.style.color = "#155724";
+    function validarS2() {
+        const r = document.getElementById('calc2').value;
+        const msg = document.getElementById('res2');
+        msg.style.display = "block";
+        if(r == 35) {
+            msg.innerHTML = "¡Correcto! 50kg sueltos cuestan S/ 225. Comprar el saco ahorra S/ 35.";
+            msg.style.background = "#D4EDDA"; msg.style.color = "#155724";
         } else {
-            f.innerHTML = "Pista: Multiplique 4.20 x 50 y reste el precio del saco.";
-            f.style.background = "#F8D7DA"; f.style.color = "#721C24";
+            msg.innerHTML = "Pista: 50 x 4.50 = 225. Ahora reste los 190 del saco.";
+            msg.style.background = "#F8D7DA"; msg.style.color = "#721C24";
         }
     }
 
-    function checkS3() {
-        const val = document.getElementById('ans3').value;
-        const f = document.getElementById('f3');
-        f.style.display = "block";
-        if(val == "OK") {
-            f.innerHTML = "¡Muy bien! La transparencia evita chismes y une a la comunidad.";
-            f.style.background = "#D4EDDA"; f.style.color = "#155724";
+    function validarS3() {
+        const r = document.getElementById('calc3').value;
+        const msg = document.getElementById('res3');
+        msg.style.display = "block";
+        if(r == "B") {
+            msg.innerHTML = "¡Muy bien! La transparencia genera confianza entre los vecinos.";
+            msg.style.background = "#D4EDDA"; msg.style.color = "#155724";
         } else {
-            f.innerHTML = "Cuidado. Ocultar cosas genera desconfianza. Siempre hable con la verdad.";
-            f.style.background = "#F8D7DA"; f.style.color = "#721C24";
+            msg.innerHTML = "La honestidad es clave. Nunca infle precios de otros productos.";
+            msg.style.background = "#F8D7DA"; msg.style.color = "#721C24";
         }
     }
 
-    function checkS4() {
-        const val = document.getElementById('ans4').value;
-        const f = document.getElementById('f4');
-        f.style.display = "block";
-        if(val.length > 4) {
-            f.innerHTML = "¡Buena idea! El emprendimiento es la clave de la libertad.";
-            f.style.background = "#D4EDDA"; f.style.color = "#155724";
+    function validarS4() {
+        const r = document.getElementById('calc4').value;
+        const msg = document.getElementById('res4');
+        msg.style.display = "block";
+        if(r == 20) {
+            msg.innerHTML = "¡Perfecto! S/ 20 soles guardados para la hornilla. ¡Paso a paso!";
+            msg.style.background = "#D4EDDA"; msg.style.color = "#155724";
         } else {
-            f.innerHTML = "Por favor, escriba una idea para mejorar su olla.";
-            f.style.background = "#F8D7DA"; f.style.color = "#721C24";
+            msg.innerHTML = "Multiplique 100 raciones por 0.20 céntimos.";
+            msg.style.background = "#F8D7DA"; msg.style.color = "#721C24";
         }
     }
 </script>
