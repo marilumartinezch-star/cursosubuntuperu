@@ -3,203 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro de Voluntariado - Ollas Comunes</title>
+    <title>Plataforma de Capacitación Comunal</title>
     <style>
         :root {
-            --rojo-primario: #8B0000;
-            --rojo-vibrante: #FF3232;
+            --rojo-oscuro: #8B0000;
+            --rojo-claro: #FF3232;
             --blanco: #FFFFFF;
             --fondo: #F0F2F5;
-            --texto: #2D3436;
+            --verde: #27AE60;
         }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            background-color: var(--fondo);
-            color: var(--texto);
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--fondo); color: #333; }
+
+        /* --- ESTILOS INTERFAZ PRINCIPAL --- */
+        #main-menu { display: block; }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--rojo-oscuro), var(--rojo-claro));
+            color: white; padding: 60px 20px; text-align: center;
         }
 
-        /* Hero Section */
-        header {
-            background: linear-gradient(135deg, var(--rojo-primario), var(--rojo-vibrante));
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
-            border-bottom: 6px solid var(--rojo-vibrante);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
+        .motto { font-style: italic; opacity: 0.9; margin-top: 10px; display: block; }
 
-        header h1 { margin: 0; font-size: 2.5rem; letter-spacing: 1px; }
-        header p { font-style: italic; opacity: 0.9; margin-top: 10px; font-size: 1.1rem; }
+        .courses-container { max-width: 1000px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
 
-        /* Contenedor Principal */
-        .main-container {
-            max-width: 1100px;
-            margin: -40px auto 40px;
-            padding: 0 20px;
-        }
-
-        /* Grid de Cursos */
-        .courses-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-
-        /* Tarjeta de Curso */
         .course-card {
-            background: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #EEE;
+            background: white; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: 0.3s; border: 1px solid #ddd;
+        }
+        .course-card:hover { transform: translateY(-5px); }
+        .card-header { height: 150px; background: var(--rojo-oscuro); display: flex; align-items: center; justify-content: center; font-size: 3rem; }
+        .card-body { padding: 20px; }
+        .card-body h2 { color: var(--rojo-oscuro); margin: 0; }
+        .btn-start { 
+            display: inline-block; background: var(--rojo-claro); color: white; padding: 12px 25px; 
+            border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; cursor: pointer;
         }
 
-        .course-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(139, 0, 0, 0.15);
+        /* --- ESTILOS DEL CURSO DESARROLLADO --- */
+        #course-detail { display: none; }
+
+        .course-nav {
+            display: flex; background: white; sticky: top; top: 0; z-index: 100;
+            border-bottom: 4px solid var(--rojo-claro); overflow-x: auto;
         }
+        .nav-btn { padding: 20px; cursor: pointer; border: none; background: none; font-weight: bold; color: var(--rojo-oscuro); flex: 1; }
+        .nav-btn.active { background: var(--rojo-oscuro); color: white; }
+        .btn-back { background: #333; color: white; border: none; padding: 10px 20px; cursor: pointer; margin: 10px; border-radius: 5px; }
 
-        .course-img {
-            height: 180px;
-            background: var(--rojo-primario);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 4rem;
-        }
+        .session-panel { display: none; max-width: 800px; margin: 30px auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .session-panel.active { display: block; animation: fadeIn 0.5s; }
 
-        .course-content { padding: 25px; flex-grow: 1; }
-        .course-content h2 { margin: 0; color: var(--rojo-primario); font-size: 1.4rem; }
-        .course-content p { color: #636e72; font-size: 0.95rem; line-height: 1.5; margin: 15px 0; }
+        .obj-box { border-left: 6px solid var(--rojo-claro); padding-left: 15px; margin-bottom: 25px; }
+        .obj-box h4 { color: var(--rojo-claro); margin: 0; text-transform: uppercase; font-size: 0.8rem; }
 
-        .course-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            background: #FDFDFD;
-            border-top: 1px solid #EEE;
-        }
+        /* Conceptos Flip */
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0; }
+        .flip-card { height: 100px; perspective: 1000px; cursor: pointer; }
+        .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.active .flip-inner { transform: rotateY(180deg); }
+        .front, .back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; border-radius: 10px; padding: 10px; text-align: center; }
+        .front { background: var(--rojo-oscuro); color: white; }
+        .back { background: #eee; color: #333; transform: rotateY(180deg); font-size: 0.85rem; }
 
-        .tag {
-            background: #FFF0F0;
-            color: var(--rojo-vibrante);
-            padding: 5px 12px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
+        /* Dinámica */
+        .simulador { background: #2D3436; color: white; padding: 25px; border-radius: 15px; }
+        .simulador h4 { color: var(--rojo-claro); margin-top: 0; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; box-sizing: border-box; }
+        .btn-validar { background: var(--rojo-claro); color: white; border: none; width: 100%; padding: 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        
+        .feedback { margin-top: 15px; padding: 10px; border-radius: 5px; display: none; text-align: center; }
+        .ok { background: var(--verde); color: white; }
+        .err { background: #E74C3C; color: white; }
 
-        .btn-enter {
-            background: var(--rojo-primario);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-enter:hover { background: var(--rojo-vibrante); }
-
-        /* Barra de Bienvenida */
-        .welcome-bar {
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        footer { text-align: center; padding: 40px; color: #95a5a6; font-size: 0.9rem; }
-
-        @media (max-width: 600px) {
-            header h1 { font-size: 1.8rem; }
-            .welcome-bar { flex-direction: column; text-align: center; gap: 15px; }
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>PANEL DE CAPACITACIÓN</h1>
-    <p>"Cosechando libertad, sembrando estabilidad"</p>
-</header>
+<div id="main-menu">
+    <header class="hero">
+        <h1>Centro de Capacitación Comunal</h1>
+        <span class="motto">"Cosechando libertad, sembrando estabilidad"</span>
+    </header>
 
-<div class="main-container">
-    
-    <div class="welcome-bar">
-        <div>
-            <span style="color: var(--rojo-primario); font-weight: bold;">¡Bienvenida, Lideresa!</span>
-            <div style="font-size: 0.9rem; color: #777;">Hoy es 15 de enero de 2026</div>
-        </div>
-        <div style="font-size: 0.9rem;">
-            <strong>Progreso General:</strong> 25% completado
-        </div>
-    </div>
-
-    <div class="courses-grid">
-        
-        <article class="course-card">
-            <div class="course-img" style="background: linear-gradient(rgba(139,0,0,0.8), rgba(139,0,0,0.8)), url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80') center/cover;">
-                💰
-            </div>
-            <div class="course-content">
-                <span class="tag">4 Sesiones</span>
+    <div class="courses-container">
+        <div class="course-card">
+            <div class="card-header">💰</div>
+            <div class="card-body">
                 <h2>Finanzas Básicas</h2>
-                <p>Aprende a cuadrar tu caja, ahorrar en el mercado y rendir cuentas con transparencia a tu comunidad.</p>
+                <p>Aprende a gestionar el dinero de tu olla común: cálculos de caja, compras y ahorro.</p>
+                <div class="btn-start" onclick="openCourse()">Iniciar Curso</div>
             </div>
-            <div class="course-stats">
-                <span style="font-size: 0.8rem; color: #27AE60;">● Disponible</span>
-                <a href="#" class="btn-enter">Iniciar</a>
-            </div>
-        </article>
+        </div>
 
-        <article class="course-card">
-            <div class="course-img" style="background: linear-gradient(rgba(255,50,50,0.8), rgba(255,50,50,0.8)), url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80') center/cover;">
-                🥗
+        <div class="course-card" style="opacity: 0.7;">
+            <div class="card-header" style="background: #555;">🥗</div>
+            <div class="card-body">
+                <h2>Nutrición Saludable</h2>
+                <p>Próximamente: Cómo preparar platos nutritivos a bajo costo.</p>
+                <div class="btn-start" style="background: #777; cursor: default;">Próximamente</div>
             </div>
-            <div class="course-content">
-                <span class="tag">3 Sesiones</span>
-                <h2>Nutrición y Salud</h2>
-                <p>Crea menús balanceados y nutritivos aprovechando los productos de temporada de bajo costo.</p>
-            </div>
-            <div class="course-stats">
-                <span style="font-size: 0.8rem; color: #F39C12;">● Próximamente</span>
-                <a href="#" class="btn-enter" style="background: #ccc; cursor: not-allowed;">Ver más</a>
-            </div>
-        </article>
-
-        <article class="course-card">
-            <div class="course-img" style="background: linear-gradient(rgba(139,0,0,0.8), rgba(139,0,0,0.8)), url('https://images.unsplash.com/photo-1521737604893-d14cc237f11d?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80') center/cover;">
-                📢
-            </div>
-            <div class="course-content">
-                <span class="tag">2 Sesiones</span>
-                <h2>Liderazgo Comunal</h2>
-                <p>Mejora la comunicación con los socios y aprende a resolver conflictos de forma pacífica y justa.</p>
-            </div>
-            <div class="course-stats">
-                <span style="font-size: 0.8rem; color: #F39C12;">● Próximamente</span>
-                <a href="#" class="btn-enter" style="background: #ccc; cursor: not-allowed;">Ver más</a>
-            </div>
-        </article>
-
+        </div>
     </div>
 </div>
 
-<footer>
-    <p>Plataforma de Capacitación para Organizaciones Sociales<br>Voluntariado 2026</p>
-</footer>
+<div id="course-detail">
+    <button class="btn-back" onclick="closeCourse()">← Volver al Menú</button>
+    
+    <nav class="course-nav">
+        <button class="nav-btn active" onclick="showTab(event, 's1')">S1: CAJA</button>
+        <button class="nav-btn" onclick="showTab(event, 's2')">S2: MERCADO</button>
+        <button class="nav-btn" onclick="showTab(event, 's3')">S3: CUENTAS</button>
+        <button class="nav-btn" onclick="showTab(event, 's4')">S4: AHORRO</button>
+    </nav>
+
+    <div class="container">
+        <section id="s1" class="session-panel active">
+            <div class="obj-box">
+                <h4>Objetivo</h4>
+                <p>Dominar el cuadre diario para que no falte ni un sol.</p>
+            </div>
+            <div class="concept-grid">
+                <div class="flip-card" onclick="this.classList.toggle('active')">
+                    <div class="flip-inner">
+                        <div class="front">INGRESO</div>
+                        <div class="back">Dinero que entra por venta de platos.</div>
+                    </div>
+                </div>
+                <div class="flip-card" onclick="this.classList.toggle('active')">
+                    <div class="flip-inner">
+                        <div class="front">EGRESO</div>
+                        <div class="back">Dinero que sale para compras.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="simulador">
+                <h4>🕹️ Dinámica: Cuadre Diario</h4>
+                <p>Iniciamos con S/ 30. Vendimos raciones por S/ 100. Gastamos S/ 70. ¿Saldo final?</p>
+                <input type="number" id="v1" placeholder="Resultado...">
+                <button class="btn-validar" onclick="validar(1, 60)">Verificar</button>
+                <div id="f1" class="feedback"></div>
+            </div>
+        </section>
+
+        <section id="s2" class="session-panel">
+            <div class="obj-box">
+                <h4>Objetivo</h4>
+                <p>Ahorrar comprando por sacos en el mercado mayorista.</p>
+            </div>
+            <div class="simulador">
+                <h4>🛒 Dinámica: El Ahorro</h4>
+                <p>Kilo suelto: S/ 5.00. Saco (50kg): S/ 210. ¿Cuánto ahorramos?</p>
+                <input type="number" id="v2" placeholder="Ahorro en Soles...">
+                <button class="btn-validar" onclick="validar(2, 40)">Calcular</button>
+                <div id="f2" class="feedback"></div>
+            </div>
+        </section>
+
+        <section id="s3" class="session-panel">
+            <div class="obj-box">
+                <h4>Objetivo</h4>
+                <p>Sustentar gastos sin boleta para transparencia total.</p>
+            </div>
+            <div class="simulador">
+                <h4>📢 Dinámica: ¿Qué hacer?</h4>
+                <p>Pagamos S/ 5 de pasaje y no hay boleta.</p>
+                <select id="v3">
+                    <option value="">Elegir...</option>
+                    <option value="ok">Hacer un vale interno firmado.</option>
+                    <option value="no">Inventar que el pollo costó más.</option>
+                </select>
+                <button class="btn-validar" onclick="validar(3, 'ok')">Validar</button>
+                <div id="f3" class="feedback"></div>
+            </div>
+        </section>
+
+        <section id="s4" class="session-panel">
+            <div class="obj-box">
+                <h4>Objetivo</h4>
+                <p>Crear un fondo para mejorar la cocina.</p>
+            </div>
+            <div class="simulador">
+                <h4>💰 Dinámica: La Meta</h4>
+                <p>Si guardamos S/ 0.50 por ración... ¿Cuánto tendremos tras 200 raciones?</p>
+                <input type="number" id="v4" placeholder="Total ahorrado...">
+                <button class="btn-validar" onclick="validar(4, 100)">Calcular Meta</button>
+                <div id="f4" class="feedback"></div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    function openCourse() {
+        document.getElementById('main-menu').style.display = 'none';
+        document.getElementById('course-detail').style.display = 'block';
+    }
+
+    function closeCourse() {
+        document.getElementById('main-menu').style.display = 'block';
+        document.getElementById('course-detail').style.display = 'none';
+    }
+
+    function showTab(e, id) {
+        document.querySelectorAll('.session-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        e.currentTarget.classList.add('active');
+    }
+
+    function validar(sesion, correcta) {
+        const input = document.getElementById('v' + sesion).value;
+        const feedback = document.getElementById('f' + sesion);
+        feedback.style.display = "block";
+        
+        if(input == correcta) {
+            feedback.innerHTML = "¡Excelente! Cálculo correcto.";
+            feedback.className = "feedback ok";
+        } else {
+            feedback.innerHTML = "Intenta de nuevo. Revisa tus números.";
+            feedback.className = "feedback err";
+        }
+    }
+</script>
 
 </body>
 </html>
